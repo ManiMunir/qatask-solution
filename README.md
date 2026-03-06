@@ -13,54 +13,13 @@ A simple Todo application built with a .NET API backend, React frontend, Keycloa
 
 - [Docker](https://www.docker.com/) and Docker Compose
 
-For local development only:
-- [.NET 10 SDK](https://dotnet.microsoft.com/download)
-- [Node.js 22+](https://nodejs.org/)
-
 ## Getting Started
-
-### Option A: Docker Compose (recommended)
-
-Start everything (PostgreSQL, Keycloak, API, and frontend) with a single command:
 
 ```bash
 docker compose up -d
 ```
 
-Wait ~30 seconds for Keycloak to fully start, then open http://localhost:4101.
-
-### Option B: Local Development
-
-#### 1. Start Infrastructure (PostgreSQL + Keycloak)
-
-```bash
-docker compose up -d postgres keycloak
-```
-
-Wait ~30 seconds for Keycloak to fully start. You can check at http://localhost:6101.
-
-#### 2. Start the API
-
-```bash
-cd ApiService
-dotnet run
-```
-
-The API will start at http://localhost:5118. It auto-migrates the database on startup.
-
-#### 3. Start the Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-The frontend will be at http://localhost:4101.
-
-### Open the App
-
-Navigate to http://localhost:4101. You will see a login prompt. Click "Log In with Keycloak" to authenticate.
+Wait ~30 seconds for Keycloak to fully start, then open http://localhost:4101. Click "Log In with Keycloak" to authenticate.
 
 ## Test Credentials
 
