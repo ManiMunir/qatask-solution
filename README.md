@@ -30,12 +30,6 @@ Wait ~30 seconds for Keycloak to fully start, then open http://localhost:4101. C
 | Regular User | testuser@example.com | TestPassword123! |
 | Admin User | admin@example.com | AdminPassword123! |
 
-## Keycloak Admin Console
-
-- URL: http://localhost:6101/admin
-- Username: admin
-- Password: admin
-
 ## API Endpoints
 
 All `/api/*` endpoints require authentication (cookie-based via Keycloak login).
