@@ -30,34 +30,6 @@ Wait ~30 seconds for Keycloak to fully start, then open http://localhost:4101. C
 | Regular User | testuser@example.com | TestPassword123! |
 | Admin User | admin@example.com | AdminPassword123! |
 
-## API Endpoints
-
-All `/api/*` endpoints require authentication (cookie-based via Keycloak login).
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check (no auth) |
-| GET | `/auth/user` | Current user info (no auth required) |
-| GET | `/login` | Initiate Keycloak login |
-| GET | `/logout` | Log out and redirect |
-| GET | `/api/todos` | List all todos |
-| GET | `/api/todos/{id}` | Get a single todo |
-| POST | `/api/todos` | Create a todo |
-| PUT | `/api/todos/{id}` | Update a todo |
-| DELETE | `/api/todos/{id}` | Delete a todo |
-
-### Todo Item Schema
-
-```json
-{
-  "id": 1,
-  "title": "string",
-  "isComplete": false,
-  "createdAt": "2026-01-01T00:00:00Z",
-  "updatedAt": "2026-01-01T00:00:00Z"
-}
-```
-
 ## Your Task
 
 Write automated tests using **Playwright** that cover the following areas:
@@ -94,3 +66,31 @@ Write automated tests using **Playwright** that cover the following areas:
 - Any helper utilities you create (e.g., auth helpers, fixtures)
 
 Good luck!
+
+## API Endpoints
+
+All `/api/*` endpoints require authentication (cookie-based via Keycloak login).
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/health` | Health check (no auth) |
+| GET | `/auth/user` | Current user info (no auth required) |
+| GET | `/login` | Initiate Keycloak login |
+| GET | `/logout` | Log out and redirect |
+| GET | `/api/todos` | List all todos |
+| GET | `/api/todos/{id}` | Get a single todo |
+| POST | `/api/todos` | Create a todo |
+| PUT | `/api/todos/{id}` | Update a todo |
+| DELETE | `/api/todos/{id}` | Delete a todo |
+
+### Todo Item Schema
+
+```json
+{
+  "id": 1,
+  "title": "string",
+  "isComplete": false,
+  "createdAt": "2026-01-01T00:00:00Z",
+  "updatedAt": "2026-01-01T00:00:00Z"
+}
+```
