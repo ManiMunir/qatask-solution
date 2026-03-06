@@ -45,9 +45,15 @@ builder.Services.AddAuthentication(options =>
 {
     options.Authority = builder.Configuration["Keycloak:Authority"]
         ?? $"http://localhost:6101/realms/qa-task";
-    var metadataAddress = builder.Configuration["Keycloak:MetadataAddress"];
-    if (!string.IsNullOrEmpty(metadataAddress))
-        options.MetadataAddress = metadataAddress;
+    var internalUrl = builder.Configuration["Keycloak:InternalUrl"];
+    if (!string.IsNullOrEmpty(internalUrl))
+    {
+        var authorityUri = new Uri(options.Authority);
+        var externalOrigin = authorityUri.GetLeftPart(UriPartial.Authority);
+        options.MetadataAddress = internalUrl + authorityUri.PathAndQuery
+            + "/.well-known/openid-configuration";
+        options.BackchannelHttpHandler = new KeycloakRewriteHandler(externalOrigin, internalUrl);
+    }
     options.ClientId = builder.Configuration["Keycloak:ClientId"] ?? "qa-task-web";
     options.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
     options.ResponseType = "code";
@@ -209,3 +215,21 @@ app.Run();
 
 // Make Program accessible to integration tests
 public partial class Program { }
+
+// Rewrites OIDC backchannel requests from the external Keycloak URL to the Docker-internal URL
+class KeycloakRewriteHandler(string externalAuthority, string internalUrl)
+    : DelegatingHandler(new HttpClientHandler())
+{
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
+    {
+        if (request.RequestUri is not null)
+        {
+            var uri = request.RequestUri.ToString();
+            if (uri.StartsWith(externalAuthority, StringComparison.OrdinalIgnoreCase))
+            {
+                request.RequestUri = new Uri(uri.Replace(externalAuthority, internalUrl));
+            }
+        }
+        return base.SendAsync(request, ct);
+    }
+}

@@ -61,12 +61,13 @@ services:
     restart: unless-stopped
     environment:
       ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: "http://+:8080"
       ConnectionStrings__QaTaskDb: "Host=postgres;Port=5432;Database=${APP_DB_NAME};Username=${APP_DB_USER};Password=${APP_DB_PASS}"
       Keycloak__Authority: "http://localhost:${KC_HOST_PORT:-6101}/realms/qa-task"
-      Keycloak__MetadataAddress: "http://keycloak:8080/realms/qa-task/.well-known/openid-configuration"
+      Keycloak__InternalUrl: "http://host.docker.internal:${KC_HOST_PORT:-6101}"
       Keycloak__ClientId: "qa-task-web"
       Keycloak__ClientSecret: "${KC_CLIENT_SECRET}"
-      Frontend__BaseUrl: ""
+      Frontend__BaseUrl: "/"
     ports:
       - "5118:8080"
     healthcheck:

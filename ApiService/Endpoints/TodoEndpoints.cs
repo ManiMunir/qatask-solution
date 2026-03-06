@@ -33,7 +33,7 @@ public static class TodoEndpoints
             if (todo is null) return Results.NotFound();
 
             todo.Title = input.Title;
-            todo.IsComplete = input.IsComplete;
+            todo.IsComplete = input.IsComplete || todo.IsComplete;
             todo.UpdatedAt = DateTime.UtcNow;
             await db.SaveChangesAsync();
             return Results.Ok(todo);

@@ -112,6 +112,7 @@ Write automated tests using **Playwright** that cover the following areas:
 - Log in via Keycloak and verify the user name is displayed
 - Add a new todo item and verify it appears in the list
 - Mark a todo as complete and verify it shows as completed
+- Mark a completed todo as incomplete and verify it updates correctly
 - Delete a todo and verify it is removed from the list
 
 ### 2. API Tests
@@ -119,7 +120,11 @@ Write automated tests using **Playwright** that cover the following areas:
 - Authenticate and call the `/api/todos` endpoint to list todos
 - Create a new todo via the API and verify it is returned
 - Update a todo via the API and verify the changes persist
+- Toggle a todo's completion status (both directions) and verify the state is correct
 - Delete a todo via the API and verify it is gone
+
+### 3. Bug Hunting
+- This application contains at least one intentional bug. Your tests should be thorough enough to catch it. Document any bugs you find.
 
 ### Notes
 - The Keycloak login flow uses a standard browser-based OIDC flow. Your Playwright tests should handle the Keycloak login form.
