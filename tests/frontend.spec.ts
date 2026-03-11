@@ -1,13 +1,36 @@
 import { test, expect } from '@playwright/test';
 import { TodoPage } from './pages/TodoPage';
+import { ApiHelper } from './utils/ApiHelper';
 import { Helper } from './utils/Helper';
 
 test.describe('Todo Application Frontend Tests @frontend', () => {
   let todoPage: TodoPage;
+  let apiHelper: ApiHelper;
+  let createdTodoIds: number[] = [];
 
-  test.beforeEach(async ({ page }) => {
+  test.beforeEach(async ({ page, request }) => {
     todoPage = new TodoPage(page);
+    apiHelper = new ApiHelper(request);
+    createdTodoIds = [];
+
+    // Intercept network responses. When UI posts a new Todo, grab its ID for cleanup later.
+    page.on('response', async (response) => {
+      if (response.url().includes('/api/todos') && response.request().method() === 'POST' && response.ok()) {
+        const body = await response.json();
+        if (body && body.id) {
+          createdTodoIds.push(body.id);
+        }
+      }
+    });
+
     await todoPage.goto();
+  });
+
+  // Delete all UI-created Todos via the API to maintain test isolation
+  test.afterEach(async () => {
+    for (const id of createdTodoIds) {
+      await apiHelper.deleteTodo(id);
+    }
   });
 
   test('should load the homepage, display app title, and verify logged-in user @smoke', async () => {
