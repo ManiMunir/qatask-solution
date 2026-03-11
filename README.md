@@ -33,6 +33,7 @@ qatask-solution/
 │   │   └── auth.setup.ts         # Global Keycloak session generator
 │   ├── api.spec.ts               # Backend API test suite
 │   └── frontend.spec.ts          # Frontend UI test suite
+│   └── login.spec.ts             # Login via UI test suite
 ├── playwright.config.ts          # Playwright configuration and project dependencies
 ├── BUG_REPORT.md                 # Documentation of discovered application defects
 └── README.md                     # Project documentation
