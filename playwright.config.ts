@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { defineConfig, devices } from '@playwright/test';
 
 /**
@@ -34,11 +35,20 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    // This project runs first and saves the authentication state
+    {
+      name: 'setup',
+      testMatch: /.*\.setup\.ts/,
+    },
+    // This is our main testing project. It depends on 'setup' and uses the saved state.
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        // Tell this project to use the saved storage state
+        storageState: 'playwright/.auth/user.json',
+      },
+      dependencies: ['setup'],
     }
-    // We will stick to Chromium first for stability and speed during development.
-    // We can enable Firefox and WebKit later if needed.
   ],
 });
