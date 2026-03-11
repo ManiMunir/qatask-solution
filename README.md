@@ -87,7 +87,7 @@ npx playwright test
 **Run specific suites using tags:**
 
 ```bash
-npx playwright test --grep @ui            # Frontend tests only
+npx playwright test --grep @frontend      # Frontend tests only
 npx playwright test --grep @api           # API tests only
 npx playwright test --grep @smoke         # Smoke tests only
 npx playwright test --grep @regression    # Regression tests only
@@ -96,7 +96,7 @@ npx playwright test --grep @regression    # Regression tests only
 **Run with the browser visible (debug mode):**
 
 ```bash
-npx playwright test --grep @ui --headed
+npx playwright test --grep @frontend --headed
 ```
 
 ---
