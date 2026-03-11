@@ -1,0 +1,23 @@
+{
+  "name": "qatask-solution",
+  "version": "1.0.0",
+  "description": "A simple Todo application built with a .NET API backend, React frontend, Keycloak authentication, and PostgreSQL database. Your task is to write automated tests using Playwright.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint tests/",
+    "lint:fix": "eslint tests/ --fix",
+    "prepare": "husky"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.4.0",
+    "eslint": "^10.0.3",
+    "eslint-plugin-playwright": "^2.9.0",
+    "husky": "^9.1.7",
+    "typescript-eslint": "^8.57.0"
+  }
+}
