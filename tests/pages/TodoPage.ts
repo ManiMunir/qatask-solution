@@ -48,13 +48,13 @@ export class TodoPage {
    * @param complete True to mark as complete, false to mark as incomplete.
    */
   async setTodoCompletion(title: string, complete: boolean): Promise<void> {
-    const todoItem = this.getTodoItem(title);
-    const checkbox = todoItem.locator('input[type="checkbox"]');
-    
-    if (complete) {
-      await checkbox.check();
-    } else {
-      await checkbox.uncheck();
+    const checkbox = this.getTodoCheckbox(title);
+    const isChecked = await checkbox.isChecked();
+
+    // Determine the current checkbox state before performing any action.
+    // Click is used instead of check/uncheck to avoid issues with controlled UI components.
+    if (complete !== isChecked) {
+      await checkbox.click();
     }
   }
 
@@ -63,9 +63,25 @@ export class TodoPage {
    * @param title The exact text of the todo item.
    */
   async deleteTodo(title: string): Promise<void> {
-    const todoItem = this.getTodoItem(title);
-    const deleteButton = todoItem.locator('button', { hasText: 'Delete' });
-    
-    await deleteButton.click();
+    await this.getTodoDeleteButton(title).click();
+  }
+
+  /**
+   * Retrieves the checkbox locator for a specific todo item.
+   * @param title The exact text of the todo item.
+   * @returns The Locator for the checkbox.
+   */
+  getTodoCheckbox(title: string): Locator {
+    // Role-based locators provide better resilience and accessibility alignment.
+    return this.getTodoItem(title).getByRole('checkbox');
+  }
+
+  /**
+   * Retrieves the delete button locator for a specific todo item.
+   * @param title The exact text of the todo item.
+   * @returns The Locator for the delete button.
+   */
+  getTodoDeleteButton(title: string): Locator {
+    return this.getTodoItem(title).getByRole('button', { name: 'Delete' });
   }
 }

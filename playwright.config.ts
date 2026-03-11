@@ -8,7 +8,7 @@ import { defineConfig, devices } from '@playwright/test';
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
@@ -33,21 +33,30 @@ export default defineConfig({
     testIdAttribute: 'data-testid',
   },
 
-  /* Configure projects for major browsers */
+  /* Configure projects for test setup and execution */
   projects: [
-    // This project runs first and saves the authentication state
+    // This runs logs in and saves the authentication state.
     {
       name: 'setup',
-      testMatch: /.*\.setup\.ts/,
+      testMatch: /utils\/.*\.setup\.ts/,
     },
-    // This is our main testing project. It depends on 'setup' and uses the saved state.
+    // This runs the login UI test without a preloaded authenticated session.
     {
-      name: 'chromium',
-      use: { 
+      name: 'keycloak-login-ui',
+      use: {
         ...devices['Desktop Chrome'],
-        // Tell this project to use the saved storage state
+      },
+      testMatch: /.*login\.spec\.ts/,
+    },
+    // Main testing project. It depends on 'setup' and uses the saved state.
+    {
+      name: 'e2e-tests',
+      use: {
+        ...devices['Desktop Chrome'],
+        // Tells this project to use the saved storage state.
         storageState: 'playwright/.auth/user.json',
       },
+      testMatch: /.*frontend\.spec\.ts|.*api\.spec\.ts/,
       dependencies: ['setup'],
     }
   ],
