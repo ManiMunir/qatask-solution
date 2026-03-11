@@ -42,7 +42,7 @@ export default defineConfig({
     // This runs logs in and saves the authentication state.
     {
       name: 'setup',
-      testMatch: '**/utils/auth.setup.ts',
+      testMatch: /.*auth\.setup\.ts/,
     },
     // This runs the login UI test without a preloaded authenticated session.
     {
@@ -60,7 +60,7 @@ export default defineConfig({
         // Tells this project to use the saved storage state.
         storageState: 'playwright/.auth/user.json',
       },
-      testMatch: /.*frontend\.spec\.ts|.*api\.spec\.ts/,
+      testMatch: /.*(frontend|api)\.spec\.ts/,
       dependencies: ['setup'],
     }
   ],

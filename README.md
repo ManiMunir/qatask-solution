@@ -1,97 +1,132 @@
-# QA Task - Todo Application
+# 📝 Todo Application — E2E Test Automation Framework
 
-A simple Todo application built with a .NET API backend, React frontend, Keycloak authentication, and PostgreSQL database. Your task is to write automated tests using Playwright.
+A robust, fully automated End-to-End (E2E) testing framework for the **Todo Application**. This project validates both the **React Frontend UI** and the **.NET Backend API** using Playwright and TypeScript, with a fully containerized local test environment.
 
-## Architecture
+---
 
-- **Backend**: ASP.NET Core 10.0 Minimal API with Entity Framework Core
-- **Frontend**: React 19 + Vite
-- **Auth**: Keycloak 26 (OpenID Connect)
-- **Database**: PostgreSQL 16
+## 🛠 Tech Stack
 
-## Prerequisites
+| Layer | Technology |
+|---|---|
+| Automation Framework | [Playwright](https://playwright.dev/) |
+| Language | TypeScript |
+| Design Pattern | Page Object Model (POM) |
+| Infrastructure | Docker & Docker Compose |
+| Authentication | Keycloak (OIDC) |
+| CI/CD | Fully headless execution with HTML reporting |
 
-- [Git](https://git-scm.com/downloads)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (includes Docker Compose) — [install guide](https://docs.docker.com/get-started/get-docker/)
+---
 
-## Getting Started
+## 📁 Repository Structure
+
+```text
+qatask-solution/
+├── tests/
+│   ├── pages/                    # Page Object Model (POM) classes
+│   │   ├── LoginPage.ts          # UI locators and methods for Keycloak login
+│   │   └── TodoPage.ts           # UI locators and methods for the Todo app
+│   ├── utils/                    # Helper classes and global scripts
+│   │   ├── ApiHelper.ts          # REST API wrapper for backend endpoints
+│   │   ├── Helper.ts             # Shared utilities (e.g., timestamps)
+│   │   ├── global.setup.ts       # Docker startup & health checks
+│   │   ├── global.teardown.ts    # Docker teardown & cleanup
+│   │   └── auth.setup.ts         # Global Keycloak session generator
+│   ├── api.spec.ts               # Backend API test suite
+│   └── frontend.spec.ts          # Frontend UI test suite
+├── playwright.config.ts          # Playwright configuration and project dependencies
+├── BUG_REPORT.md                 # Documentation of discovered application defects
+└── README.md                     # Project documentation
+```
+
+---
+
+## ⚙️ Prerequisites
+
+Ensure the following are installed and running on your local machine before proceeding:
+
+- **Node.js** v18 or higher
+- **Docker Desktop** — must be running prior to test execution
+
+---
+
+## 🚀 Installation & Configuration
+
+**1. Clone the repository and install dependencies:**
 
 ```bash
-git clone git@github.com:nalper-omnesoft/qatask.git
-cd qatask
-docker compose up -d
+npm install
 ```
 
-Wait ~30 seconds for Keycloak to fully start, then open http://localhost:4101. Click "Log In with Keycloak" to authenticate.
+**2. Install Playwright browsers:**
 
-## Test Credentials
-
-| User | Email | Password |
-|------|-------|----------|
-| Regular User | testuser@example.com | TestPassword123! |
-| Admin User | admin@example.com | AdminPassword123! |
-
-## Your Task
-
-Write automated tests using **Playwright** that cover the following areas:
-
-### 1. Frontend Tests
-- Verify the homepage loads and displays the app title
-- Log in via Keycloak and verify the user name is displayed
-- Add a new todo item and verify it appears in the list
-- Mark a todo as complete and verify it shows as completed
-- Mark a completed todo as incomplete and verify it updates correctly
-- Delete a todo and verify it is removed from the list
-
-### 2. API Tests
-- Verify the health endpoint returns a successful response
-- Authenticate and call the `/api/todos` endpoint to list todos
-- Create a new todo via the API and verify it is returned
-- Update a todo via the API and verify the changes persist
-- Toggle a todo's completion status (both directions) and verify the state is correct
-- Delete a todo via the API and verify it is gone
-
-### 3. Bug Hunting
-- This application contains at least one intentional bug. Your tests should be thorough enough to catch it. Document any bugs you find.
-
-### Notes
-- The Keycloak login flow uses a standard browser-based OIDC flow. Your Playwright tests should handle the Keycloak login form.
-- The app uses cookie-based authentication. Once logged in via the browser, the session cookie will be available for API calls made from the same browser context.
-- The app comes seeded with 3 todo items.
-- `data-testid` attributes are provided on key UI elements to help with selectors.
-
-### Deliverables
-- A `tests/` directory in this repo containing your Playwright tests
-- A `playwright.config.ts` file at the repo root
-- Instructions on how to run your tests (you can add to this README)
-- Any helper utilities you create (e.g., auth helpers, fixtures)
-
-Good luck!
-
-## API Endpoints
-
-All `/api/*` endpoints require authentication (cookie-based via Keycloak login).
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check (no auth) |
-| GET | `/auth/user` | Current user info (no auth required) |
-| GET | `/login` | Initiate Keycloak login |
-| GET | `/logout` | Log out and redirect |
-| GET | `/api/todos` | List all todos |
-| GET | `/api/todos/{id}` | Get a single todo |
-| POST | `/api/todos` | Create a todo |
-| PUT | `/api/todos/{id}` | Update a todo |
-| DELETE | `/api/todos/{id}` | Delete a todo |
-
-### Todo Item Schema
-
-```json
-{
-  "id": 1,
-  "title": "string",
-  "isComplete": false,
-  "createdAt": "2026-01-01T00:00:00Z",
-  "updatedAt": "2026-01-01T00:00:00Z"
-}
+```bash
+npx playwright install --with-deps
 ```
+
+**3. Configure environment variables:**
+
+Create a `.env` file in the root directory with the following test credentials:
+
+```env
+TEST_USER_EMAIL=testuser@example.com
+TEST_USER_PASSWORD=TestPassword123!
+```
+
+---
+
+## 🎮 Test Execution
+
+> **Note:** You do not need to manually start Docker containers. Playwright's Global Setup/Teardown will automatically spin up the environment, wait for it to be healthy, run all tests, and tear it down on completion.
+
+**Run the full test suite (UI & API) in headless mode:**
+
+```bash
+npx playwright test
+```
+
+**Run specific suites using tags:**
+
+```bash
+npx playwright test --grep @ui            # Frontend tests only
+npx playwright test --grep @api           # API tests only
+npx playwright test --grep @smoke         # Smoke tests only
+npx playwright test --grep @regression    # Regression tests only
+```
+
+**Run with the browser visible (debug mode):**
+
+```bash
+npx playwright test --grep @ui --headed
+```
+
+---
+
+## 📊 Reporting
+
+Playwright generates a comprehensive HTML report after each run, including execution times, step-by-step traces, and screenshots for any failures.
+
+**View the report:**
+
+```bash
+npx playwright show-report
+```
+
+---
+
+## 🏗 Framework Architecture
+
+### Smart Authentication
+`auth.setup.ts` runs as the first project in the Playwright dependency chain. It logs into Keycloak once and saves the session state to disk. All subsequent UI tests inject this saved state directly, bypassing the login screen entirely — improving both speed and stability.
+
+### Test Isolation & Data Cleanup
+API network interception is used during UI tests to capture the IDs of any newly created Todo items. A global `afterEach` hook silently deletes these items via the API after each test, ensuring a clean state for every subsequent run.
+
+---
+
+## 🐛 Defect Tracking
+
+Defects discovered during the development of this framework are fully documented in [`BUG_REPORT.md`](./BUG_REPORT.md), covering:
+
+- Backend API failures
+- Frontend UI state issues
+- Keycloak logout configuration errors
