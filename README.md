@@ -128,6 +128,9 @@ API network interception is used during UI tests to capture the IDs of any newly
 
 Defects discovered during the development of this framework are fully documented in [`BUG_REPORT.md`](./BUG_REPORT.md), covering:
 
-- Backend API failures
+- Backend API silent failures (data integrity)
 - Frontend UI state issues
 - Keycloak logout configuration errors
+- Critical cross-user data leakage (shared state between Admin and User)
+- Session caching vulnerabilities (ghost sessions via browser back button)
+- UX improvements (input validation)
