@@ -6,6 +6,10 @@ import { defineConfig, devices } from '@playwright/test';
  * Includes setup for local testing against the Dockerized environment.
  */
 export default defineConfig({
+  //trigger our custom Docker scripts
+  globalSetup: require.resolve('./tests/utils/global.setup.ts'),
+  globalTeardown: require.resolve('./tests/utils/global.teardown.ts'),
+
   testDir: './tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
@@ -38,7 +42,7 @@ export default defineConfig({
     // This runs logs in and saves the authentication state.
     {
       name: 'setup',
-      testMatch: /utils\/.*\.setup\.ts/,
+      testMatch: '**/utils/auth.setup.ts',
     },
     // This runs the login UI test without a preloaded authenticated session.
     {

@@ -1,9 +1,8 @@
 import { test as setup, expect } from '@playwright/test';
-import * as path from 'path';
 import { LoginPage } from '../pages/LoginPage';
 import { TodoPage } from '../pages/TodoPage';
 
-const authFile = path.join(__dirname, '../playwright/.auth/user.json');
+const authFile = 'playwright/.auth/user.json';
 
 /**
  * Authenticates the user via Keycloak and saves the browser storage state.
